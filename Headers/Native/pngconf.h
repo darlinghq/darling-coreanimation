@@ -1,0 +1,1 @@
+/usr/include/libpng12/pngconf.h
