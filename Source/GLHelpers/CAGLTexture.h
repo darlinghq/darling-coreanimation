@@ -25,7 +25,7 @@
 */
 
 #import <Foundation/Foundation.h>
-#if (__APPLE__)
+#if (__APPLE__ && !DARLING)
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
 #import <OpenGL/glu.h>

@@ -25,7 +25,7 @@
 */
 
 #import <Foundation/Foundation.h>
-#if (__APPLE__)
+#if (__APPLE__ && !DARLING)
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
 #import <OpenGL/glu.h>
@@ -40,7 +40,7 @@
 {
   NSString * _source;
   GLuint _shaderID;
-  
+
   /* 'compiled' prevents multiple compiles for same program.
      It's not updated if 'source' is changed (which we don't
      support anyway -- shader is mostly an immutable object,
@@ -71,4 +71,3 @@
 }
 - (GLenum) shaderType;
 @end
-

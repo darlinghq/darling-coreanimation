@@ -25,7 +25,7 @@
 */
 
 #import <Foundation/Foundation.h>
-#if (__APPLE__)
+#if (__APPLE__ && !DARLING)
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
 #import <OpenGL/glu.h>
@@ -48,7 +48,7 @@
 - (id) initWithArrayOfShaders: (NSArray *)shaders;
 - (void) bindAttrib: (NSString *)name
          toLocation: (GLuint)location;
-         
+
 - (void) validate;
 - (GLint) validateStatus;
 - (void) printValidateLog;
