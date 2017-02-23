@@ -7,16 +7,17 @@ if(COMMAND cmake_policy)
 	cmake_policy(SET CMP0005 NEW)
 endif(COMMAND cmake_policy)
 
-add_definitions(-D__APPLE__ -D__MACH__)
-add_definitions(-DTARGET_OS_MAC=1)
-add_definitions(-DHAVE_STDINT_H=1 -DHAVE_WCHAR_H=1)
-add_definitions(-D__APPLE__ -D__DYNAMIC__)
-add_definitions(-D__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__=1080)
-add_definitions(-DOBJC_ZEROCOST_EXCEPTIONS=1 -DGNUSTEP -DPRIxPTR=\"lx\" -DPRIuPTR=\"lu\" -DPRIdPTR=\"ld\" -DPRIu64=\"ull\")
-add_definitions(-U__linux__) # Because of broken ifdef in NSPage.m
-add_definitions(-DGNUSTEP_BASE_LIBRARY -DHAVE_DISPATCH_DISPATCH_H -DHAVE_BACKTRACE -DHAVE_UNEXPECTED)
+add_definitions(
+	-D__APPLE__  -D__MACH__ -D__DYNAMIC__ -D__DARWIN_UNIX03 -DTARGET_OS_MAC=1
+	-U__linux__ # Because of broken ifdef in NSPage.m
+	-DGNUSTEP -DGNUSTEP_BASE_LIBRARY
+	-D__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__=1080
+	-DHAVE_STDINT_H=1 -DHAVE_WCHAR_H=1
+	-DHAVE_DISPATCH_DISPATCH_H -DHAVE_BACKTRACE -DHAVE_UNEXPECTED
+	-DOBJC_ZEROCOST_EXCEPTIONS=1 -DPRIxPTR=\"lx\" -DPRIuPTR=\"lu\" -DPRIdPTR=\"ld\" -DPRIu64=\"ull\"
+)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -D__DARWIN_UNIX03 -fPIC -w -fconstant-string-class=NSConstantString -fblocks -ggdb -O0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -fPIC -w -fconstant-string-class=NSConstantString -fblocks -ggdb -O0")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -nostdlib -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
 
 if(BITS EQUAL 64)
@@ -31,49 +32,43 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/darling
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/Headers)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers/Native)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/Headers/Native)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers/Native/cairo)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/Headers/Native/cairo)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers/Native/freetype2_x64)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/Headers/Native/freetype2_x64)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers/Native/freetype2)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/Headers/Native/freetype2)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Source)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../foundation)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../foundation)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../foundation/Headers)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../foundation/Headers)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../corefoundation/Headers)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../corefoundation/Headers)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../coregraphics/Headers)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../coregraphics/Headers)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../AppKit/gui/Headers)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../AppKit/gui/Headers)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libobjc2)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libdispatch)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../icu/icuSources/common)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../icu/icuSources/i18n)
-include_directories(${DARLING_TOP_DIRECTORY}/platform-include)
-include_directories(${DARLING_TOP_DIRECTORY}/platform-include/machine)
-include_directories(${DARLING_TOP_DIRECTORY}/kernel-include)
-include_directories(${DARLING_TOP_DIRECTORY}/compiler-include)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libffi/include)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/stdtime/FreeBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/gen)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include)
-include_directories(${DARLING_TOP_DIRECTORY}/src/duct/include)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libm/Source)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libmalloc/include/malloc)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../openssl/src/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libxml2/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libxslt/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../liblcms1/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../zlib)
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/Headers
+	${CMAKE_CURRENT_BINARY_DIR}/Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/Source
+	${CMAKE_CURRENT_SOURCE_DIR}/../foundation
+	${CMAKE_CURRENT_BINARY_DIR}/../foundation
+	${CMAKE_CURRENT_SOURCE_DIR}/../foundation/Headers
+	${CMAKE_CURRENT_BINARY_DIR}/../foundation/Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/../corefoundation/Headers
+	${CMAKE_CURRENT_BINARY_DIR}/../corefoundation/Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/../coregraphics/Headers
+	${CMAKE_CURRENT_BINARY_DIR}/../coregraphics/Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/../AppKit/gui/Headers
+	${CMAKE_CURRENT_BINARY_DIR}/../AppKit/gui/Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/../libobjc2
+	${CMAKE_CURRENT_SOURCE_DIR}/../libdispatch
+	${CMAKE_CURRENT_SOURCE_DIR}/../icu/icuSources/common
+	${CMAKE_CURRENT_SOURCE_DIR}/../icu/icuSources/i18n
+	${DARLING_TOP_DIRECTORY}/platform-include
+	${DARLING_TOP_DIRECTORY}/platform-include/machine
+	${DARLING_TOP_DIRECTORY}/kernel-include
+	${DARLING_TOP_DIRECTORY}/compiler-include
+	${DARLING_TOP_DIRECTORY}/src/libffi/include
+	${DARLING_TOP_DIRECTORY}/src/libc/stdtime/FreeBSD
+	${DARLING_TOP_DIRECTORY}/src/libc/gen
+	${DARLING_TOP_DIRECTORY}/src/libc/include
+	${DARLING_TOP_DIRECTORY}/src/duct/include
+	${DARLING_TOP_DIRECTORY}/src/libm/Source
+	${DARLING_TOP_DIRECTORY}/src/libmalloc/include/malloc
+	${CMAKE_CURRENT_SOURCE_DIR}/../openssl/src/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../libxml2/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../libxslt/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../liblcms1/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../zlib
+)
 
 set(OBJC2RUNTIME 1)
 set(BASE_NATIVE_OBJC_EXCEPTIONS 1)
