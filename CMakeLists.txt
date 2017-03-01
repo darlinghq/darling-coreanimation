@@ -1,4 +1,4 @@
-project(coreanimation)
+project(CoreAnimation)
 
 cmake_minimum_required(VERSION 2.4.0)
 
@@ -17,7 +17,7 @@ add_definitions(
 	-DOBJC_ZEROCOST_EXCEPTIONS=1 -DPRIxPTR=\"lx\" -DPRIuPTR=\"lu\" -DPRIdPTR=\"ld\" -DPRIu64=\"ull\"
 )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -fPIC -w -fconstant-string-class=NSConstantString -fblocks -ggdb -O0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -w -fconstant-string-class=NSConstantString -fblocks -ggdb -O0")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -nostdlib -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
 
 if(BITS EQUAL 64)
@@ -31,6 +31,12 @@ endif(BITS EQUAL 64)
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/darling")
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+find_package(Freetype REQUIRED)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_CAIRO cairo)
+pkg_check_modules(PC_FONTCONFIG fontconfig)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
@@ -68,6 +74,10 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../libxslt/include
 	${CMAKE_CURRENT_SOURCE_DIR}/../liblcms1/include
 	${CMAKE_CURRENT_SOURCE_DIR}/../zlib
+
+	${FREETYPE_INCLUDE_DIRS}
+	${PC_CAIRO_INCLUDE_DIRS}
+	${PC_FONTCONFIG_INCLUDE_DIRS}
 )
 
 set(OBJC2RUNTIME 1)
@@ -153,7 +163,7 @@ set(GNUSTEP_GUI_MINOR_VERSION 25)
 set(GNUSTEP_GUI_SUBMINOR_VERSION 0)
 set(GCC_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
 
-set(coreanimation_SRCS
+set(CoreAnimation_SRCS
 	Source/CAAnimation.m
 	Source/CABackingStore.m
 	Source/CABase.m
@@ -182,9 +192,9 @@ set(coreanimation_SRCS
 	Source/GLHelpers/CAGLTexture.m
 )
 
-set_source_files_properties(${coreanimation_SRCS} LANGUAGE C)
+set_source_files_properties(${CoreAnimation_SRCS} LANGUAGE C)
 
-add_library(coreanimation SHARED ${coreanimation_SRCS})
-target_link_libraries(coreanimation AppKit GL)
-set_target_properties(coreanimation PROPERTIES OUTPUT_NAME QuartzCore)
-install(TARGETS coreanimation DESTINATION ${CMAKE_INSTALL_LIBDIR}/darling)
+add_library(CoreAnimation SHARED ${CoreAnimation_SRCS})
+target_link_libraries(CoreAnimation AppKit GL)
+set_target_properties(CoreAnimation PROPERTIES OUTPUT_NAME QuartzCore)
+install(TARGETS CoreAnimation DESTINATION ${CMAKE_INSTALL_LIBDIR}/darling)
